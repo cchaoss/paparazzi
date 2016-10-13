@@ -1,0 +1,16 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="module_choice">
+  <doc>
+    <description></description>
+  </doc>
+  <header>
+    <file name="module_choice.h"/>
+  </header>
+  <init fun="module_choice_init()"/>
+  <periodic fun="module_choice_periodic()" freq="50"/>
+  <makefile>
+    <file name="module_choice.c"/>
+  </makefile>
+</module>
+
