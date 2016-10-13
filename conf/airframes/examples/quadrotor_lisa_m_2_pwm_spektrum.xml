@@ -11,17 +11,17 @@
 <airframe name="Quadrotor LisaM_2.0 pwm">
 
   <firmware name="rotorcraft">
-    <target name="ap" board="lisa_m_2.0">
+    <target name="ap" board="apogee_1.0">
       <!-- MPU6000 is configured to output data at 2kHz, but polled at 512Hz PERIODIC_FREQUENCY -->
+	<define name="AHRS_ALIGNER_LED" value="2"/>
     </target>
 
     <target name="nps" board="pc">
       <module name="fdm" type="jsbsim"/>
     </target>
 
-    <module name="radio_control" type="spektrum">
-      <define name="RADIO_MODE" value="RADIO_AUX1"/>
-      <configure name="USE_SECONDARY_SPEKTRUM_RECEIVER" value="1"/>
+    <module name="radio_control" type="ppm">
+     
     </module>
 
     <module name="motor_mixing"/>
@@ -31,7 +31,7 @@
     </module>
 
     <module name="telemetry"     type="transparent"/>
-    <module name="imu"           type="aspirin_v2.2"/>
+    <module name="imu"           type="apogee"/>
     <module name="gps"           type="ublox"/>
     <module name="stabilization" type="int_quat"/>
     <module name="ahrs"          type="int_cmpl_quat">

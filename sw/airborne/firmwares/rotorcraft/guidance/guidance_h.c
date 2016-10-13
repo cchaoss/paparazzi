@@ -279,6 +279,14 @@ void guidance_h_mode_changed(uint8_t new_mode)
       break;
 #endif
 
+/*  want to test the opticflow stab  */
+#if DEBUG_LOVE_MODE == true
+    case LOVE_MODE_H:
+	control_h_enter();
+	break;
+#endif
+/*** *********************************/	
+
     case GUIDANCE_H_MODE_NAV:
       guidance_h_nav_enter();
 #if NO_ATTITUDE_RESET_ON_MODE_CHANGE
@@ -345,6 +353,14 @@ void guidance_h_read_rc(bool  in_flight)
       guidance_h_module_read_rc();
       break;
 #endif
+
+/*  want to test the opticflow stab  */
+#if DEBUG_LOVE_MODE == true
+    case LOVE_MODE_H:
+	control_h_read_rc();
+	break;
+#endif
+/*** *********************************/	
 
     case GUIDANCE_H_MODE_NAV:
       if (radio_control.status == RC_OK) {
@@ -464,6 +480,14 @@ void guidance_h_run(bool  in_flight)
       guidance_h_module_run(in_flight);
       break;
 #endif
+
+/*  want to test the opticflow stab  */
+#if DEBUG_LOVE_MODE == true
+    case LOVE_MODE_H:
+	control_h_run(in_flight);
+	break;
+#endif
+/*** *********************************/	
 
     case GUIDANCE_H_MODE_FLIP:
       guidance_flip_run();

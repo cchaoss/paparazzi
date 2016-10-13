@@ -481,6 +481,15 @@ void autopilot_set_mode(uint8_t new_autopilot_mode)
         guidance_h_mode_changed(GUIDANCE_H_MODE_MODULE_SETTING);
 #endif
         break;
+
+/*   add my mode test.    2016.10.7@wudong   */
+#ifdef DEBUG_LOVE_MODE
+      case AP_MODE_LOVE:
+	guidance_h_mode_changed(LOVE_MODE_H);
+	break;
+#endif
+/*********************************************/
+
       case AP_MODE_FLIP:
         guidance_h_mode_changed(GUIDANCE_H_MODE_FLIP);
         break;
@@ -533,6 +542,15 @@ void autopilot_set_mode(uint8_t new_autopilot_mode)
         guidance_v_mode_changed(GUIDANCE_V_MODE_MODULE_SETTING);
 #endif
         break;
+
+/*   Add my mode test.   2016.10.7@wudong   */
+#ifdef DEBUG_LOVE_MODE
+      case AP_MODE_LOVE:
+	guidance_v_mode_changed(LOVE_MODE_V);
+	break;
+#endif
+/********************************************/
+
       case AP_MODE_FLIP:
         guidance_v_mode_changed(GUIDANCE_V_MODE_FLIP);
         break;

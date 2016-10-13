@@ -42,6 +42,8 @@
 #define GUIDANCE_V_MODE_FLIP      7
 #define GUIDANCE_V_MODE_GUIDED    8
 
+#define LOVE_MODE_V	20
+
 extern uint8_t guidance_v_mode;
 
 /** altitude setpoint in meters (input).

@@ -61,6 +61,8 @@
 #define GUIDANCE_H_MODE_FLIP        9
 #define GUIDANCE_H_MODE_GUIDED      10
 
+#define LOVE_MODE_H	20
+
 
 struct HorizontalGuidanceSetpoint {
   /** horizontal position setpoint in NED.

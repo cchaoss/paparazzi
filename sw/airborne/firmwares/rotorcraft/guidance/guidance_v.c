@@ -260,6 +260,14 @@ void guidance_v_mode_changed(uint8_t new_mode)
       break;
 #endif
 
+/*  want to test the sonar alt_hold  */
+#if DEBUG_LOVE_MODE == true
+    case LOVE_MODE_V:
+	control_v_enter();
+	break;
+#endif
+/*** *********************************/	
+
     case GUIDANCE_V_MODE_FLIP:
       break;
 
@@ -347,6 +355,14 @@ void guidance_v_run(bool in_flight)
       guidance_v_module_run(in_flight);
       break;
 #endif
+
+/*  want to test the sonar alt_hold  */
+#if DEBUG_LOVE_MODE == true
+    case LOVE_MODE_V:
+	control_v_run(in_flight);
+	break;
+#endif
+/*** *********************************/	
 
     case GUIDANCE_V_MODE_NAV: {
       if (vertical_mode == VERTICAL_MODE_ALT) {

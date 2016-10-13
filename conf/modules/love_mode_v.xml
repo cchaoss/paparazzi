@@ -1,0 +1,19 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="love_mode_v" dir="love_mode_v">
+  <doc>
+    <description>
+	test the us100 sonar in ppz. 
+	wudong	2016/10/7
+	862281335@qq.com
+    </description>
+  </doc>
+  <header>
+    <file name="love_mode_v.h"/>
+  </header>
+
+  <makefile>
+    <file name="love_mode_v.c"/>
+  </makefile>
+</module>
+

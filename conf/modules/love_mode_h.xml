@@ -1,0 +1,19 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="love_mode_h" dir="love_mode_h">
+  <doc>
+    <description>
+	test the px4flow in ppz
+	wudong	2016/10/7
+	862281335@qq.com
+    </description>
+  </doc>
+  <header>
+    <file name="love_mode_h.h"/>
+  </header>
+
+  <makefile>
+    <file name="love_mode_h.c"/>
+  </makefile>
+</module>
+
