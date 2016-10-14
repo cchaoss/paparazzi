@@ -12,7 +12,7 @@
 <airframe name="Quadrotor LisaM_2.0">
 
   <firmware name="rotorcraft">
-    <target name="ap" board="apogee_1.0">
+    <target name="ap" board="lisa_m_2.0">
 		<define name="AHRS_ALIGNER_LED" value="2"/>
     </target>
     <target name="nps" board="pc">
@@ -30,7 +30,7 @@
     </module>
 
     <module name="telemetry"     type="transparent"/>
-    <module name="imu"           type="apogee"/>
+    <module name="imu"           type="aspirin_v2.1"/>
     <module name="gps"           type="ublox"/>
     <module name="stabilization" type="int_quat"/>
     <module name="ahrs"          type="int_cmpl_quat">
@@ -42,16 +42,18 @@
   </firmware>
 
   <servos driver="Pwm">
-    <servo name="FRONT"   no="0" min="1000" neutral="1100" max="1900"/>
-    <servo name="BACK"    no="1" min="1000" neutral="1100" max="1900"/>
-    <servo name="RIGHT"   no="2" min="1000" neutral="1100" max="1900"/>
-    <servo name="LEFT"    no="3" min="1000" neutral="1100" max="1900"/>
+    <servo name="FRONT_LEFT"   no="0" min="1050" neutral="1050" max="1950"/>
+    <servo name="FRONT_RIGHT"  no="1" min="1050" neutral="1050" max="1950"/>
+    <servo name="BACK_RIGHT"   no="2" min="1050" neutral="1050" max="1950"/>
+    <servo name="BACK_LEFT"    no="3" min="1050" neutral="1050" max="1950"/>
   </servos>
 
   <modules>
-    <module name="gps" type="ubx_ucenter"/>
-    <module name="geo_mag"/>
-    <module name="air_data"/>
+	<module name="geo_mag"/>
+    <!--module name="gps" type="ubx_ucenter"/>
+    
+    <module name="air_data"/-->
+	<!--module name="logger_sd_spi_direct"/-->
   </modules>
 
   <commands>
@@ -62,16 +64,15 @@
   </commands>
 
   <section name="MIXING" prefix="MOTOR_MIXING_">
-    <!-- front (CW), right (CCW), back (CW), left (CCW) -->
-    <define name="TYPE" value="QUAD_PLUS"/>
+    <define name="TYPE" value="QUAD_X"/>
   </section>
 
   <command_laws>
     <call fun="motor_mixing_run(autopilot_motors_on,FALSE,values)"/>
-    <set servo="FRONT" value="motor_mixing.commands[MOTOR_FRONT]"/>
-    <set servo="RIGHT" value="motor_mixing.commands[MOTOR_RIGHT]"/>
-    <set servo="BACK"  value="motor_mixing.commands[MOTOR_BACK]"/>
-    <set servo="LEFT"  value="motor_mixing.commands[MOTOR_LEFT]"/>
+    <set servo="FRONT_LEFT"  value="motor_mixing.commands[MOTOR_FRONT_LEFT]"/>
+    <set servo="FRONT_RIGHT" value="motor_mixing.commands[MOTOR_FRONT_RIGHT]"/>
+    <set servo="BACK_RIGHT"  value="motor_mixing.commands[MOTOR_BACK_RIGHT]"/>
+    <set servo="BACK_LEFT"   value="motor_mixing.commands[MOTOR_BACK_LEFT]"/>
   </command_laws>
 
   <section name="IMU" prefix="IMU_">
@@ -95,9 +96,9 @@
   <section name="AHRS" prefix="AHRS_">
     <!-- values used if no GPS fix, on 3D fix is update by geo_mag module -->
     <!-- Toulouse -->
-    <define name="H_X" value="0.513081"/>
-    <define name="H_Y" value="-0.00242783"/>
-    <define name="H_Z" value="0.858336"/>
+    <define name="H_X" value="0.878418"/>
+    <define name="H_Y" value="-0.103027"/>
+    <define name="H_Z" value="-0.46582"/>
   </section>
 
   <section name="INS" prefix="INS_">

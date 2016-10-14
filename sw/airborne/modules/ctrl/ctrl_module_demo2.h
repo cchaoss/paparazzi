@@ -30,7 +30,6 @@
 
 #include <std.h>
 
-
 // Settings
 extern float ctrl_module_demo_pr_ff_gain;  // Pitch/Roll
 extern float ctrl_module_demo_pr_d_gain;
@@ -54,8 +53,5 @@ extern void guidance_h_module_run(bool in_flight);
 extern void guidance_v_module_init(void);
 extern void guidance_v_module_enter(void);
 extern void guidance_v_module_run(bool in_flight);
-
-
-
 
 #endif /* CTRL_MODULE_DEMO_H_ */

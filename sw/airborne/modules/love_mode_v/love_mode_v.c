@@ -1,5 +1,5 @@
 /*
- * Copyright (C) wudong
+ * Copyright (C) wudong  2016
  *
  * This file is part of paparazzi
  *
@@ -29,7 +29,7 @@
 #include "modules/sonar_for_ppz/sonar_for_ppz.h"
 #include "modules/love_mode_v/love_mode_v.h"
 #include "firmwares/rotorcraft/guidance/guidance_v.h"
-#include "firmwares/rotorcraft/stabilization.h"
+#include "firmwares/rotorcraft/stabilization/stabilization_attitude.h"
 
 
 #ifndef MAX_PPRZ
@@ -72,7 +72,7 @@ void control_v_enter(void)
 {
 
 	guidance_v_z_sp = 256*sonar_height;//stateGetPositionNed_i()->z; // set current altitude as setpoint
-        guidance_v_z_sum_err = 0;
+    guidance_v_z_sum_err = 0;
 	GuidanceVSetRef(256*sonar_height, 0, 0);
         //GuidanceVSetRef(stateGetPositionNed_i()->z, 0, 0);
 }

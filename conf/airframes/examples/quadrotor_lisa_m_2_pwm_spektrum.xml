@@ -50,9 +50,12 @@
   </servos>
 
   <modules>
-    <module name="gps" type="ubx_ucenter"/>
+    <!--module name="gps" type="ubx_ucenter"/>
     <module name="geo_mag"/>
-    <module name="air_data"/>
+    <module name="air_data"/-->
+	<module name = "module_choice"/>
+	<module name = "ctrl_module_demo"/>
+	
   </modules>
 
   <commands>
@@ -180,7 +183,9 @@
   <section name="AUTOPILOT">
     <define name="MODE_MANUAL" value="AP_MODE_ATTITUDE_DIRECT"/>
     <define name="MODE_AUTO1"  value="AP_MODE_HOVER_Z_HOLD"/>
-    <define name="MODE_AUTO2"  value="AP_MODE_NAV"/>
+    <define name="MODE_AUTO2"  value="AP_MODE_MODULE"/>
+		<define name="GUIDANCE_V_MODE_MODULE_SETTING" value="GUIDANCE_V_MODE_MODULE"/>
+		<define name="GUIDANCE_H_MODE_MODULE_SETTING" value="GUIDANCE_H_MODE_MODULE"/>
   </section>
 
   <section name="BAT">
