@@ -82,11 +82,11 @@
 #endif
 
 #ifndef TAKE_OFF_SPEED
-#define TAKE_OFF_SPEED -0.3
+#define TAKE_OFF_SPEED -0.8
 #endif
 
 #ifndef TAKE_OFF_ALTITUDE
-#define TAKE_OFF_ALTITUDE 3
+#define TAKE_OFF_ALTITUDE 4
 #endif
 
 /*******************************************************/
@@ -110,13 +110,13 @@ static void run_hover_loop(bool in_flight);
 /*******************************************************/
 
 
-
+float height_bis = 0;
 int32_t my_guidance_v_rc_delta_t;
 int32_t my_guidance_v_rc_zd_sp;
-unsigned char take_off  = 1,
-	      rc_climb  = 2,
-	      auto_land = 3,
-	      flag = 0;
+unsigned char 	take_off  = 1,
+	      		rc_climb  = 2,
+	      		auto_land = 3,
+	      		flag = 0;
 
 /*******************************************Horizontal loops*******************************************************/
 void guidance_h_module_init(void)
@@ -168,7 +168,11 @@ void guidance_h_module_run(bool in_flight)
 /*********************************************Vertical loops***************************************************************/
 void guidance_v_module_init(void)
 {
-  // initialization of your custom vertical controller goes here
+	if(vff.z < -0.1 || vff.z > 0.1)
+	{
+		for(uint8_t i = 0;i<5;i++)	height_bis += vff.z;
+		height_bis /= 5;
+	}
 }
 
 void guidance_v_module_enter(void)
@@ -180,19 +184,21 @@ void guidance_v_module_enter(void)
 		guidance_v_zd_sp = 0;//enter climb
 
 		guidance_v_z_sp = -256*TAKE_OFF_ALTITUDE;//stateGetPositionNed_i()->z;//enter hover_z_hold
-        	guidance_v_z_sum_err = 0;
-        	GuidanceVSetRef(stateGetPositionNed_i()->z, 0, 0);
+        guidance_v_z_sum_err = 0;
+        GuidanceVSetRef(-256*TAKE_OFF_ALTITUDE, 0, 0);
 	}
 
 	if (module_number == rc_climb)
 	{	
-		
 		guidance_v_zd_sp = 0;
 	}
 
 	if (module_number == auto_land)//GUIDANCE_V_MODE_CLIMB
 	{
 		guidance_v_zd_sp = 0;
+		guidance_v_z_sp = -256*height_bis;//stateGetPositionNed_i()->z;//enter hover_z_hold
+    	guidance_v_z_sum_err = 0;
+    	GuidanceVSetRef(-256*height_bis, 0, 0);
 	}
 #endif	
 }
@@ -207,74 +213,73 @@ void guidance_v_module_run(UNUSED bool in_flight)
 		if((-vff.z) < TAKE_OFF_ALTITUDE )//climb with TAKE_OFF_SPEED
 		{
 			guidance_v_zd_sp = SPEED_BFP_OF_REAL(TAKE_OFF_SPEED);
-     			gv_update_ref_from_zd_sp(guidance_v_zd_sp, stateGetPositionNed_i()->z);
+     		//gv_update_ref_from_zd_sp(guidance_v_zd_sp, stateGetPositionNed_i()->z);
+			gv_update_ref_from_zd_sp(guidance_v_zd_sp, stateGetPositionNed_i()->z);
+      		run_hover_loop(in_flight);
+			stabilization_cmd[COMMAND_THRUST] = guidance_v_delta_t;
+		}
+
+		if((-vff.z) >= TAKE_OFF_ALTITUDE-1 && (-vff.z) <= TAKE_OFF_ALTITUDE)//climb with 0.5m/s
+		{
+				guidance_v_zd_sp = SPEED_BFP_OF_REAL(0.5);
+      			gv_update_ref_from_z_sp(guidance_v_z_sp);
       			run_hover_loop(in_flight);
-			stabilization_cmd[COMMAND_THRUST] = guidance_v_delta_t;
-		}
-
-		if((-vff.z) >= TAKE_OFF_ALTITUDE && (-vff.z) <= TAKE_OFF_ALTITUDE + 0.5)//climb with 0.3m/s
-		{
-	
-				guidance_v_zd_sp = SPEED_BFP_OF_REAL(0.3);
-      				gv_update_ref_from_z_sp(guidance_v_z_sp);
-      				run_hover_loop(in_flight);
 				stabilization_cmd[COMMAND_THRUST] = guidance_v_delta_t;
 		}
 
-		if((-vff.z) >= TAKE_OFF_ALTITUDE + 0.5 && (-vff.z) <= TAKE_OFF_ALTITUDE + 1)//hover	
+		if((-vff.z) >= TAKE_OFF_ALTITUDE)//hover	
 		{
-	
 				guidance_v_zd_sp = 0;
-      				gv_update_ref_from_z_sp(guidance_v_z_sp);
-      				run_hover_loop(in_flight);
+      			gv_update_ref_from_z_sp(guidance_v_z_sp);
+      			run_hover_loop(in_flight);
 				stabilization_cmd[COMMAND_THRUST] = guidance_v_delta_t;
 		}
 		
 
-		if((-vff.z) > TAKE_OFF_ALTITUDE + 1)//down with TAKE_OFF_SPEED
+		if((-vff.z) > TAKE_OFF_ALTITUDE + 1)//down with 0.5m/s
 		{
-			guidance_v_zd_sp = SPEED_BFP_OF_REAL(-0.3);
-     			gv_update_ref_from_zd_sp(guidance_v_zd_sp, stateGetPositionNed_i()->z);
-	      		run_hover_loop(in_flight);
+			guidance_v_zd_sp = SPEED_BFP_OF_REAL(-0.5);
+     		gv_update_ref_from_z_sp(guidance_v_z_sp);
+	      	run_hover_loop(in_flight);
 			stabilization_cmd[COMMAND_THRUST] = guidance_v_delta_t;
 		}
-		
-		gpio_setup_output(GPIOC, GPIO12);// LED_red 亮
-		gpio_set(GPIOC, GPIO12);
+
+		//gpio_setup_output(GPIOC, GPIO12);// LED_red 亮
+		//gpio_set(GPIOC, GPIO12);
 	}
 
 
-
+/*
 	if (module_number == rc_climb)
 	{
 		
 		guidance_v_zd_sp = my_guidance_v_rc_zd_sp;//GUIDANCE_V_MODE_RC_CLIMB
-     		gv_update_ref_from_zd_sp(guidance_v_zd_sp, stateGetPositionNed_i()->z);
-      		run_hover_loop(in_flight);
-      		stabilization_cmd[COMMAND_THRUST] = guidance_v_delta_t;
+     	gv_update_ref_from_zd_sp(guidance_v_zd_sp, stateGetPositionNed_i()->z);
+      	run_hover_loop(in_flight);
+      	stabilization_cmd[COMMAND_THRUST] = guidance_v_delta_t;
 
-		gpio_setup_output(GPIOC, GPIO12);
-		gpio_toggle(GPIOC, GPIO12);
+		//gpio_setup_output(GPIOC, GPIO12);
+		//gpio_toggle(GPIOC, GPIO12);
 	}
-
+*/
 
 
 	if (module_number == auto_land)
 	{
 		guidance_v_zd_sp = SPEED_BFP_OF_REAL(SAFE_DESCENT_SPEED);//climb
-     		gv_update_ref_from_zd_sp(guidance_v_zd_sp, stateGetPositionNed_i()->z);
-      		run_hover_loop(in_flight);
-        	stabilization_cmd[COMMAND_THRUST] = guidance_v_delta_t;
+     	gv_update_ref_from_zd_sp(guidance_v_zd_sp, stateGetPositionNed_i()->z);
+      	run_hover_loop(in_flight);
+        stabilization_cmd[COMMAND_THRUST] = guidance_v_delta_t;
 		
-		if((-vff.z < 0.3))
+		if((vff.z-height_bis) < 0.3)
 		//if (!autopilot_in_flight) //在接近地面30cm的时候，还会出现上升现象
 		{
 			autopilot_set_motors_on(FALSE);
-		        stabilization_cmd[COMMAND_THRUST] = 0;
+		    stabilization_cmd[COMMAND_THRUST] = 0;
 		}	
 		
-		gpio_setup_output(GPIOC, GPIO12);//LED_red 灭
-		gpio_clear(GPIOC, GPIO12);
+		//gpio_setup_output(GPIOC, GPIO12);//LED_red 灭
+		//gpio_clear(GPIOC, GPIO12);
 	}
 #endif
 }

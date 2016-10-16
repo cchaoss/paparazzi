@@ -30,13 +30,13 @@
 
 #include <std.h>
 
+extern float height_bis;
 
 // Settings
 extern float ctrl_module_demo_pr_ff_gain;  // Pitch/Roll
 extern float ctrl_module_demo_pr_d_gain;
 extern float ctrl_module_demo_y_ff_gain;   // Yaw
 extern float ctrl_module_demo_y_d_gain;
-
 
 // Demo with own guidance_h
 #define GUIDANCE_H_MODE_MODULE_SETTING GUIDANCE_H_MODE_MODULE

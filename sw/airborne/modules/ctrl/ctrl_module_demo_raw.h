@@ -30,13 +30,12 @@
 
 #include <std.h>
 
-extern float height_bis;
-
 // Settings
 extern float ctrl_module_demo_pr_ff_gain;  // Pitch/Roll
 extern float ctrl_module_demo_pr_d_gain;
 extern float ctrl_module_demo_y_ff_gain;   // Yaw
 extern float ctrl_module_demo_y_d_gain;
+
 
 // Demo with own guidance_h
 #define GUIDANCE_H_MODE_MODULE_SETTING GUIDANCE_H_MODE_MODULE
@@ -54,8 +53,5 @@ extern void guidance_h_module_run(bool in_flight);
 extern void guidance_v_module_init(void);
 extern void guidance_v_module_enter(void);
 extern void guidance_v_module_run(bool in_flight);
-
-
-
 
 #endif /* CTRL_MODULE_DEMO_H_ */
