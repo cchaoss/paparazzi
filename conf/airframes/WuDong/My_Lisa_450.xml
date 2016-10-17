@@ -53,7 +53,7 @@
     <!--module name="gps" type="ubx_ucenter"/>
     
     <module name="air_data"/-->
-	<!--module name="logger_sd_spi_direct"/-->
+	<module name="logger_sd_spi_direct"/>
   </modules>
 
   <commands>
