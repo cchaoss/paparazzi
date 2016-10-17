@@ -26,6 +26,7 @@
  *  Sensor from the PIXHAWK project
  */
 
+#include "modules/ctrl/ctrl_module_demo.h"
 #include "modules/optical_flow/px4flow.h"
 #include "modules/datalink/mavlink_decoder.h"
 #include "subsystems/abi.h"
@@ -87,7 +88,8 @@ void px4flow_downlink(void)
                         &optical_flow.flow_x,
                         &optical_flow.flow_y,
                         &optical_flow.flow_comp_m_x,
-                        &optical_flow.flow_comp_m_y,
+                        //&optical_flow.flow_comp_m_y,
+						&height_bis,
                         &optical_flow.quality,
                         &optical_flow.ground_distance);
 }

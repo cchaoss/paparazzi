@@ -36,20 +36,24 @@ void module_choice_init(void)
 {
 	module_number = 0;
 
+	/*************************    判断气压计数据是否正常    SERVO_5 --> LED_yellow   *************************/
+/*
+	if(vff.z == 0)		gpio_setup_input(GPIOA, GPIO0);//气压计无数据-->LED_red 灭
+	else
+	{
+		module_number = 0;
+		autopilot_set_motors_on(FALSE);
+		//gpio_setup_output(GPIOA, GPIO0);//气压计数据正常-->LED_yellow 亮
+		//gpio_set(GPIOA, GPIO0);
+	}
+*/
 }
 
 
 void module_choice_periodic(void) 
 {
 
-	/*************************    判断气压计数据是否正常    SERVO_5 --> LED_yellow   *************************/
 
-	if(vff.z == 0)		gpio_setup_input(GPIOA, GPIO0);//气压计无数据-->LED_red 灭
-	else
-	{
-		gpio_setup_output(GPIOA, GPIO0);//气压计数据正常-->LED_yellow 亮
-		gpio_set(GPIOA, GPIO0);
-	}
 
 
 	/*************************    判断飞控是否解锁    ****************************************************/
