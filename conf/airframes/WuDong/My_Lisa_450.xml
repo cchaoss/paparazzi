@@ -35,10 +35,6 @@
 		<!--configure name="MPU9250_I2C_DEV" value="i2c1"/--> 
 	</module>
     <module name="telemetry"     type="transparent"/>
-<<<<<<< HEAD
-    <module name="imu"           type="aspirin_v2.1"/>
-=======
->>>>>>> 0749394bb9c52a0be2d56edd4a3d12830de292d0
     <module name="gps"           type="ublox"/>
     <module name="stabilization" type="int_quat"/>
     <module name="ahrs"          type="int_cmpl_quat">
@@ -49,27 +45,7 @@
     <module name="ins"/>
   </firmware>
 
-<<<<<<< HEAD
-  <servos driver="Pwm">
-    <servo name="FRONT_LEFT"   no="0" min="1050" neutral="1050" max="1950"/>
-    <servo name="FRONT_RIGHT"  no="1" min="1050" neutral="1050" max="1950"/>
-    <servo name="BACK_RIGHT"   no="2" min="1050" neutral="1050" max="1950"/>
-    <servo name="BACK_LEFT"    no="3" min="1050" neutral="1050" max="1950"/>
-  </servos>
 
-  <modules>
-	<module name="geo_mag"/>
-    <!--module name="gps" type="ubx_ucenter"/>
-    
-    <module name="air_data"/-->
-	<module name="logger_sd_spi_direct"/>
-=======
-  <!--servos driver="Pwm">
-    <servo name="FL"   no="0" min="1000" neutral="1000" max="1900"/>
-    <servo name="FR"   no="1" min="1000" neutral="1000" max="1900"/>
-    <servo name="BR"   no="2" min="1000" neutral="1000" max="1900"/>
-    <servo name="BL"   no="3" min="1000" neutral="1000" max="1900"/>
-  </servos-->
   <servos driver="Pwm"> 
     <servo name="NE"  no="0" min="1000" neutral="1000" max="2000"/>
     <servo name="SE"  no="1" min="1000" neutral="1000" max="2000"/>
@@ -100,7 +76,6 @@
       <define name="MS5611_SLAVE_ADDR=0xEE"/> 
       <define name="MS5611_SEND_BARO_ALTITUDE"/>
 	</load-->
->>>>>>> 0749394bb9c52a0be2d56edd4a3d12830de292d0
   </modules>
 
   <commands>
@@ -111,11 +86,6 @@
   </commands>
 
   <section name="MIXING" prefix="MOTOR_MIXING_">
-<<<<<<< HEAD
-    <define name="TYPE" value="QUAD_X"/>
-=======
-    <!-- front left (CW), front right (CCW), back right (CW), back left (CCW) -->
-    <!--define name="TYPE" value="QUAD_X"/-->
     <define name="TRIM_ROLL"   value="0"/>           
     <define name="TRIM_PITCH"  value="0"/>           
     <define name="TRIM_YAW"    value="0"/>           
@@ -125,30 +95,14 @@
     <define name="PITCH_COEF"  value="{  256, -256, -256,  256 }"/>
     <define name="YAW_COEF"    value="{ -256,  256, -256,  256 }"/>
     <define name="THRUST_COEF" value="{  256,  256,  256,  256 }"/>
->>>>>>> 0749394bb9c52a0be2d56edd4a3d12830de292d0
   </section>
-
-  <!--command_laws>
-    <call fun="motor_mixing_run(autopilot_motors_on,FALSE,values)"/>
-    <set servo="FL" value="motor_mixing.commands[MOTOR_FRONT_LEFT]"/>
-    <set servo="FR" value="motor_mixing.commands[MOTOR_FRONT_RIGHT]"/>
-    <set servo="BR" value="motor_mixing.commands[MOTOR_BACK_RIGHT]"/>
-    <set servo="BL" value="motor_mixing.commands[MOTOR_BACK_LEFT]"/>
-  </command_laws-->
 
   <command_laws>
     <call fun="motor_mixing_run(autopilot_motors_on,FALSE,values)"/>
-<<<<<<< HEAD
-    <set servo="FRONT_LEFT"  value="motor_mixing.commands[MOTOR_FRONT_LEFT]"/>
-    <set servo="FRONT_RIGHT" value="motor_mixing.commands[MOTOR_FRONT_RIGHT]"/>
-    <set servo="BACK_RIGHT"  value="motor_mixing.commands[MOTOR_BACK_RIGHT]"/>
-    <set servo="BACK_LEFT"   value="motor_mixing.commands[MOTOR_BACK_LEFT]"/>
-=======
     <set servo="NE" value="motor_mixing.commands[SERVO_NE]"/>
     <set servo="SE" value="motor_mixing.commands[SERVO_SE]"/>
     <set servo="SW" value="motor_mixing.commands[SERVO_SW]"/>
     <set servo="NW" value="motor_mixing.commands[SERVO_NW]"/>
->>>>>>> 0749394bb9c52a0be2d56edd4a3d12830de292d0
   </command_laws>
 
   <section name="IMU" prefix="IMU_">
@@ -175,17 +129,10 @@
 
   <section name="AHRS" prefix="AHRS_">   
     <!-- values used if no GPS fix, on 3D fix is update by geo_mag module -->
-<<<<<<< HEAD
-    <!-- Toulouse -->
-    <define name="H_X" value="0.878418"/>
-    <define name="H_Y" value="-0.103027"/>
-    <define name="H_Z" value="-0.46582"/>
-=======
     <!-- Toulouse -->    
     <define name="H_X" value="0.829932"/>
     <define name="H_Y" value="-0.0407214"/>
     <define name="H_Z" value="0.556377"/>
->>>>>>> 0749394bb9c52a0be2d56edd4a3d12830de292d0
   </section>
 
   <section name="INS" prefix="INS_">
