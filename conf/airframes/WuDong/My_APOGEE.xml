@@ -1,0 +1,261 @@
+<!DOCTYPE airframe SYSTEM "../airframe.dtd">
+
+<!-- this is a quadrotor frame equiped with
+     * Autopilot:   Lisa/M 2.0             
+     * IMU:         Aspirin 2.2            
+     * Actuators:   PWM motor controllers  
+     * GPS:         Ublox M8N                  
+     * RC:          FS-IA6B-PPM      
+	 * 2016/10/13   WuDong
+-->
+
+<airframe name="Quadrotor APOGEE_1.0">
+
+  <firmware name="rotorcraft">
+    <target name="ap" board="apogee_1.0">
+		<define name="AHRS_ALIGNER_LED" value="2"/>
+   	</target>
+    <target name="nps" board="pc">
+      <module name="fdm" type="jsbsim"/>
+    </target>
+
+    <module name="radio_control" type="ppm">
+		<!--define name="PPM_CONFIG" value="1"/-->	<!--     UART1_RX 	   -->
+		<define name="PPM_CONFIG" value="2"/>		<!-- SERVO_6 (default) -->
+    </module>
+
+    <module name="actuators"     type="pwm">
+      <define name="SERVO_HZ" value="400"/>
+      <!--define name="USE_SERVOS_7AND8"/-->
+    </module>
+
+    <!--define name="USE_BARO_BOARD" value="FALSE"/-->	<!--禁止板载气压计-->
+	<define name="USE_UART6"/>
+	<define name="UART6_BAUD" value="B57600"/>
+    	<!--define name="USE_I2C1"/-->      		<!--can not USE_SERVOS_7AND8 and USE_I2C1 at the same time-->
+    <module name="imu" 		type="apogee">	<!--conf/firmvares/subsystems/shared can find this makefile -->
+		<!--configure name="MPU9250_I2C_DEV" value="i2c1"/--> 
+	</module>
+    <module name="telemetry"     type="transparent"/>
+    <module name="gps"           type="ublox"/>
+    <module name="stabilization" type="int_quat"/>
+    <module name="ahrs"          type="int_cmpl_quat">
+      <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="30"/>
+    </module>
+
+	<module name="motor_mixing"/>
+    <module name="ins" type="extended"/>
+  </firmware>
+
+
+  <servos driver="Pwm"> 
+    <servo name="NE"  no="0" min="1000" neutral="1000" max="2000"/>
+    <servo name="SE"  no="1" min="1000" neutral="1000" max="2000"/>
+    <servo name="SW"  no="2" min="1000" neutral="1000" max="2000"/>
+    <servo name="NW"  no="3" min="1000" neutral="1000" max="2000"/>
+  </servos>
+
+  <modules>
+    <!--module name="gps" type="ubx_ucenter"/-->
+	
+	<module name="sonar_uart">
+		<configure name="SONAR_UART" value="UART6"/>
+		<configure name="SONAR_UART_BAUD" value="B57600"/>
+	</module>
+	
+	<!--module name="module_choice.xml"/>
+	<module name="ctrl_module_demo">
+		<define name="SAFE_DESCENT_SPEED" value="0.5"/>
+		<define name="TAKE_OFF_SPEED"     value="-0.8"/>
+		<define name="TAKE_OFF_ALTITUDE"  value="4"/>
+	</module-->
+
+	<!--module name="px4flow"/>
+	<module name="mavlink_decoder">
+		<configure name="MAVLINK_PORT"		value="UART1"/>
+		<configure name="MAVLINK_BAUD"		value="B115200"/>
+	</module-->
+
+    <!--load name="baro_ms5611_i2c.xml">
+	  <define name="USE_I2C2"/>
+	  <define name="MS5611_I2C_DEV" value="i2c2"/>
+      <define name="SENSOR_SYNC_SEND"/>
+      <define name="MS5611_SLAVE_ADDR=0xEE"/> 
+      <define name="MS5611_SEND_BARO_ALTITUDE"/>
+	</load-->
+  </modules>
+
+  <commands>
+    <axis name="ROLL"   failsafe_value="0"/>
+    <axis name="PITCH"  failsafe_value="0"/>
+    <axis name="YAW"    failsafe_value="0"/>
+    <axis name="THRUST" failsafe_value="0"/>
+  </commands>
+
+  <section name="MIXING" prefix="MOTOR_MIXING_">
+    <define name="TRIM_ROLL"   value="0"/>           
+    <define name="TRIM_PITCH"  value="0"/>           
+    <define name="TRIM_YAW"    value="0"/>           
+    <define name="NB_MOTOR"    value="4"/>
+    <define name="SCALE"       value="256"/>
+    <define name="ROLL_COEF"   value="{ -256, -256,  256,  256 }"/>
+    <define name="PITCH_COEF"  value="{  256, -256, -256,  256 }"/>
+    <define name="YAW_COEF"    value="{ -256,  256, -256,  256 }"/>
+    <define name="THRUST_COEF" value="{  256,  256,  256,  256 }"/>
+  </section>
+
+  <command_laws>
+    <call fun="motor_mixing_run(autopilot_motors_on,FALSE,values)"/>
+    <set servo="NE" value="motor_mixing.commands[SERVO_NE]"/>
+    <set servo="SE" value="motor_mixing.commands[SERVO_SE]"/>
+    <set servo="SW" value="motor_mixing.commands[SERVO_SW]"/>
+    <set servo="NW" value="motor_mixing.commands[SERVO_NW]"/>
+  </command_laws>
+
+  <section name="IMU" prefix="IMU_">
+	<define name="ACCEL_X_NEUTRAL" value="129"/>  <!--2016/9/4-->
+	<define name="ACCEL_Y_NEUTRAL" value="-29"/>
+	<define name="ACCEL_Z_NEUTRAL" value="-304"/>
+	<define name="ACCEL_X_SENS" value="4.88628412591" integer="16"/>
+	<define name="ACCEL_Y_SENS" value="4.9152218073" integer="16"/>
+	<define name="ACCEL_Z_SENS" value="4.82886297475" integer="16"/>
+
+
+	<define name="MAG_X_NEUTRAL" value="72"/>
+	<define name="MAG_Y_NEUTRAL" value="112"/>
+	<define name="MAG_Z_NEUTRAL" value="64"/>
+	<define name="MAG_X_SENS" value="6.8169011626" integer="16"/>
+	<define name="MAG_Y_SENS" value="5.8417728759" integer="16"/>
+	<define name="MAG_Z_SENS" value="6.55215305663" integer="16"/>
+
+
+	<define name="BODY_TO_IMU_PHI"   value="0.5" unit="deg"/>   <!-- roll-->
+	<define name="BODY_TO_IMU_THETA" value="0" unit="deg"/>     <!--pitch-->
+	<define name="BODY_TO_IMU_PSI"   value="0" unit="deg"/>     <!-- yaw-->
+  </section>
+
+  <section name="AHRS" prefix="AHRS_">   
+    <!-- values used if no GPS fix, on 3D fix is update by geo_mag module -->
+    <!-- Toulouse -->    
+    <define name="H_X" value="0.829932"/>
+    <define name="H_Y" value="-0.0407214"/>
+    <define name="H_Z" value="0.556377"/>
+  </section>
+
+  <section name="INS" prefix="INS_">
+  </section>
+
+
+  <!--姿态稳定环的PID参数-->
+  <section name="STABILIZATION_ATTITUDE" prefix="STABILIZATION_ATTITUDE_">
+    <!-- setpoints -->    <!--定位点-->
+    <define name="SP_MAX_PHI"        value="45." unit="deg"/>       <!--roll的最大角度值-->
+    <define name="SP_MAX_THETA"      value="45." unit="deg"/>       <!--pitch的最大角度值--> 
+    <define name="SP_MAX_R"          value="60." unit="deg/s"/>     <!--绕yaw轴的最大角速度-->
+    <define name="DEADBAND_A"        value="2"/>  		    <!--遥控器绕中间点的死区  roll 2-->
+    <define name="DEADBAND_E"        value="2"/>  		    <!--遥控器绕中间点的死区  pitch 2-->
+    <define name="DEADBAND_R"        value="200"/> 		    <!--遥控器绕中间点的死区  yaw-->
+
+    <!-- reference --> 
+    <define name="REF_OMEGA_P"  value="250" unit="deg/s"/>      <!--各自轴的二阶模态固有频率-->
+    <define name="REF_ZETA_P"   value="0.85"/>                  <!--各自轴的二阶模型的阻尼系数-->
+    <define name="REF_MAX_P"    value="180." unit="deg/s"/>     <!--参考模型中角速度的约束-->
+    <define name="REF_MAX_PDOT" value="RadOfDeg(700.)"/>       <!--参照模型中角加速度的约束-->
+
+    <define name="REF_OMEGA_Q"  value="250" unit="deg/s"/>    <!--200-->
+    <define name="REF_ZETA_Q"   value="0.85"/>		      	  <!--0.85-->
+    <define name="REF_MAX_Q"    value="180." unit="deg/s"/>   <!--160-->
+    <define name="REF_MAX_QDOT" value="RadOfDeg(700.)"/>      <!--6000-->
+
+    <define name="REF_OMEGA_R"  value="380" unit="deg/s"/>   
+    <define name="REF_ZETA_R"   value="0.85"/>
+    <define name="REF_MAX_R"    value="160." unit="deg/s"/>
+    <define name="REF_MAX_RDOT" value="RadOfDeg(250.)"/>
+
+    <!-- feedback -->  
+    <define name="PHI_PGAIN"    value="400"/>	<!--800 400 250-->
+    <define name="PHI_DGAIN"    value="250"/>	 
+    <define name="PHI_IGAIN"    value="50"/> 	
+
+    <define name="THETA_PGAIN"  value="400"/>	<!-- 420 150 100-->
+    <define name="THETA_DGAIN"  value="250"/>	
+    <define name="THETA_IGAIN"  value="50"/> 	
+
+    <define name="PSI_PGAIN"    value="400"/>	<!-- 600 100 100-->
+    <define name="PSI_DGAIN"    value="200"/>	
+    <define name="PSI_IGAIN"    value="10"/>	
+
+    <!-- feedforward --> 
+    <define name="PHI_DDGAIN"   value="100"/>	
+    <define name="THETA_DDGAIN" value="100"/> 	
+    <define name="PSI_DDGAIN"   value="100"/> 	
+  </section>
+
+
+  <section name="GUIDANCE_V" prefix="GUIDANCE_V_">
+    <define name="REF_MIN_ZDD" value="-0.2*9.81"/> 
+    <define name="REF_MAX_ZDD" value="0.2*9.81"/>  
+    <define name="REF_MIN_ZD" value="-3."/>        
+    <define name="REF_MAX_ZD" value="3."/>         
+    <define name="HOVER_KP"                     value="200"/> 
+    <define name="HOVER_KD"                     value="80"/> 
+    <define name="HOVER_KI"                     value="20"/> 
+    <define name="NOMINAL_HOVER_THROTTLE"       value="0.5"/> 
+    <define name="ADAPT_INITIAL_HOVER_THROTTLE" value="0.49"/> 
+    <define name="ADAPT_MIN_HOVER_THROTTLE"     value="0.45"/> 
+    <define name="ADAPT_MAX_HOVER_THROTTLE"     value="0.8"/> 
+    <define name="ADAPT_THROTTLE_ENABLED"       value="TRUE"/> 
+  </section>
+
+
+  <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
+    <define name="PGAIN"  	 value="50"/>  
+    <define name="DGAIN" 	 value="100"/> 
+    <define name="IGAIN" 	 value="20"/> 
+
+    <!-- optional parameters -->
+    <define name="AGAIN" value="70"/>
+    <define name="VGAIN" value="0"/>
+    <define name="MAX_BANK" value="20" unit="deg"/>
+    <define name="USE_SPEED_REF" value="TRUE"/>
+    <define name="REF_MAX_SPEED" value="5.0" unit="m/s"/>
+    <define name="REF_MAX_ACCEL" value="5.66" unit="m/s2"/>
+    <define name="REF_OMEGA" value="67" unit="deg"/>
+    <define name="REF_ZETA" value="0.85"/>
+    <define name="REF_TAU" value="0.5"/>
+
+    <define name="APPROX_FORCE_BY_THRUST" value="TRUE"/> 
+  </section>
+
+  <section name="NAV">
+    <define name="ARRIVED_AT_WAYPOINT" value="2" unit="m"/>
+  </section>
+
+  <section name="SIMULATOR" prefix="NPS_">
+    <define name="ACTUATOR_NAMES"  value="front_motor, right_motor, back_motor, left_motor" type="string[]"/>
+    <define name="JSBSIM_MODEL" value="simple_quad" type="string"/>
+    <define name="SENSORS_PARAMS" value="nps_sensors_params_default.h" type="string"/>
+    <!-- mode switch on joystick channel 5 (axis numbering starting at zero) -->
+    <define name="JS_AXIS_MODE" value="4"/>
+  </section>
+
+  <section name="AUTOPILOT">
+    <define name="MODE_MANUAL" value="AP_MODE_ATTITUDE_DIRECT"/>
+    <define name="MODE_AUTO1"  value="AP_MODE_ATTITUDE_RC_CLIMB"/>
+    <define name="MODE_AUTO2"  value="AP_MODE_HOVER_Z_HOLD"/>
+
+	<!--define name="MODE_AUTO2"  value="AP_MODE_MODULE"/>
+    <define name="GUIDANCE_H_MODE_MODULE_SETTING"    value="GUIDANCE_H_MODE_MODULE"/>	
+    <define name="GUIDANCE_V_MODE_MODULE_SETTING"    value="GUIDANCE_V_MODE_MODULE"/-->
+    
+    <!--define name="MODE_STARTUP"  value="AP_MODE_ATTITUDE_DIRECT"/-->
+  </section>
+
+  <section name="BAT">
+    <define name="CATASTROPHIC_BAT_LEVEL" value="10"  	unit="V"/>
+    <define name="CRITIC_BAT_LEVEL"       value="10"  	unit="V"/>
+    <define name="LOW_BAT_LEVEL"          value="11.1" 	unit="V"/>
+    <define name="MAX_BAT_LEVEL"          value="12.4" 	unit="V"/>
+    <define name="MILLIAMP_AT_FULL_THROTTLE" value="30000"/>
+  </section>
+</airframe>
