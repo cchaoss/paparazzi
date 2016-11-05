@@ -171,14 +171,14 @@ void guidance_v_module_init(void)
 
 }
 
-bool off_set_flag = true;
+//bool off_set_flag = true;
 void guidance_v_module_enter(void)
 {
-	if(off_set_flag)
+	/*if(off_set_flag)
 	{	
 		height_bis = vff.z;
 		off_set_flag = false;
-	}
+	}*/
 	
 
 #if 1
@@ -188,20 +188,24 @@ void guidance_v_module_enter(void)
 
 		guidance_v_z_sp = -256*TAKE_OFF_ALTITUDE;//stateGetPositionNed_i()->z;//enter hover_z_hold
         guidance_v_z_sum_err = 0;
-        GuidanceVSetRef(-256*TAKE_OFF_ALTITUDE, 0, 0);
+        GuidanceVSetRef(-256*TAKE_OFF_ALTITUDE, 0, 0);/*#define GuidanceVSetRef(_pos, _speed, _accel) { \
+														gv_set_ref(_pos, _speed, _accel);        \
+														guidance_v_z_ref = _pos;             \
+														guidance_v_zd_ref = _speed;          \
+														guidance_v_zdd_ref = _accel;*/
 	}
-
+/*
 	if (module_number == rc_climb)
 	{	
 		guidance_v_zd_sp = 0;
 	}
-
+*/
 	if (module_number == auto_land)//GUIDANCE_V_MODE_CLIMB
 	{
 		guidance_v_zd_sp = 0;
-		guidance_v_z_sp = -256*height_bis;//stateGetPositionNed_i()->z;//enter hover_z_hold
-    	guidance_v_z_sum_err = 0;
-    	GuidanceVSetRef(-256*height_bis, 0, 0);
+		//guidance_v_z_sp = -256*height_bis;//stateGetPositionNed_i()->z;//enter hover_z_hold
+    	//guidance_v_z_sum_err = 0;
+    	//GuidanceVSetRef(-256*height_bis, 0, 0);
 	}
 #endif	
 }
@@ -274,7 +278,7 @@ void guidance_v_module_run(UNUSED bool in_flight)
       	run_hover_loop(in_flight);
         stabilization_cmd[COMMAND_THRUST] = guidance_v_delta_t;
 		
-		if((vff.z-height_bis) < 0.3)
+		if((-vff.z) < 0.2)//warning!
 		//if (!autopilot_in_flight) //在接近地面30cm的时候，还会出现上升现象
 		{
 			autopilot_set_motors_on(FALSE);
