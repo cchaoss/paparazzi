@@ -42,7 +42,7 @@
     </module>
 
 	<module name="motor_mixing"/>
-    <module name="ins"/>
+    <module name="ins" type="extended"/>
   </firmware>
 
 
@@ -56,12 +56,12 @@
   <modules>
     <module name="gps" type="ubx_ucenter"/>
 	
-	<module name="module_choice.xml"/>
+	<!--module name="module_choice.xml"/>
 	<module name="ctrl_module_demo">
 		<define name="SAFE_DESCENT_SPEED" value="0.5"/>
 		<define name="TAKE_OFF_SPEED"     value="-0.8"/>
 		<define name="TAKE_OFF_ALTITUDE"  value="4"/>
-	</module>
+	</module-->
 
 	<!--module name="px4flow"/>
 	<module name="mavlink_decoder">
@@ -122,8 +122,8 @@
 	<define name="MAG_Z_SENS" value="6.55215305663" integer="16"/>
 
 
-	<define name="BODY_TO_IMU_PHI"   value="0.5" unit="deg"/>   <!-- roll-->
-	<define name="BODY_TO_IMU_THETA" value="0" unit="deg"/>     <!--pitch-->
+	<define name="BODY_TO_IMU_PHI"   value="0.4" unit="deg"/>   <!-- roll-->
+	<define name="BODY_TO_IMU_THETA" value="0.5" unit="deg"/>     <!--pitch-->
 	<define name="BODY_TO_IMU_PSI"   value="0" unit="deg"/>     <!-- yaw-->
   </section>
 
@@ -144,9 +144,9 @@
     <!-- setpoints -->    <!--定位点-->
     <define name="SP_MAX_PHI"        value="45." unit="deg"/>       <!--roll的最大角度值-->
     <define name="SP_MAX_THETA"      value="45." unit="deg"/>       <!--pitch的最大角度值--> 
-    <define name="SP_MAX_R"          value="60." unit="deg/s"/>     <!--绕yaw轴的最大角速度-->
-    <define name="DEADBAND_A"        value="2"/>  		    <!--遥控器绕中间点的死区  roll 2-->
-    <define name="DEADBAND_E"        value="2"/>  		    <!--遥控器绕中间点的死区  pitch 2-->
+    <define name="SP_MAX_R"          value="90." unit="deg/s"/>     <!--绕yaw轴的最大角速度-->
+    <define name="DEADBAND_A"        value="2"/>  		    <!--遥控器绕中间点的死区  roll-->
+    <define name="DEADBAND_E"        value="2"/>  		    <!--遥控器绕中间点的死区  pitch-->
     <define name="DEADBAND_R"        value="200"/> 		    <!--遥控器绕中间点的死区  yaw-->
 
     <!-- reference --> 
@@ -202,7 +202,7 @@
 
 
   <section name="GUIDANCE_H" prefix="GUIDANCE_H_">
-    <define name="PGAIN"  	 value="50"/>  
+    <define name="PGAIN"  	 value="80"/>  
     <define name="DGAIN" 	 value="100"/> 
     <define name="IGAIN" 	 value="20"/> 
 
@@ -234,21 +234,21 @@
 
   <section name="AUTOPILOT">
     <define name="MODE_MANUAL" value="AP_MODE_ATTITUDE_DIRECT"/>
-    <!--define name="MODE_AUTO1"  value="AP_MODE_ATTITUDE_RC_CLIMB"/-->
-    <define name="MODE_AUTO1"  value="AP_MODE_HOVER_Z_HOLD"/>
+    <define name="MODE_AUTO1"  value="AP_MODE_ATTITUDE_RC_CLIMB"/>
+    <define name="MODE_AUTO2"  value="AP_MODE_HOVER_Z_HOLD"/>
 
-	<define name="MODE_AUTO2"  value="AP_MODE_MODULE"/>
+	<!--define name="MODE_AUTO2"  value="AP_MODE_MODULE"/>
     <define name="GUIDANCE_H_MODE_MODULE_SETTING"    value="GUIDANCE_H_MODE_MODULE"/>	
-    <define name="GUIDANCE_V_MODE_MODULE_SETTING"    value="GUIDANCE_V_MODE_MODULE"/>
+    <define name="GUIDANCE_V_MODE_MODULE_SETTING"    value="GUIDANCE_V_MODE_MODULE"/-->
     
     <!--define name="MODE_STARTUP"  value="AP_MODE_ATTITUDE_DIRECT"/-->
   </section>
 
   <section name="BAT">
     <define name="CATASTROPHIC_BAT_LEVEL" value="9"  	unit="V"/>
-    <define name="CRITIC_BAT_LEVEL"       value="9"  	unit="V"/>
-    <define name="LOW_BAT_LEVEL"          value="10" 	unit="V"/>
-    <define name="MAX_BAT_LEVEL"          value="12.6" 	unit="V"/>
+    <define name="CRITIC_BAT_LEVEL"       value="10"  	unit="V"/>
+    <define name="LOW_BAT_LEVEL"          value="11.1" 	unit="V"/>
+    <define name="MAX_BAT_LEVEL"          value="12.4" 	unit="V"/>
     <define name="MILLIAMP_AT_FULL_THROTTLE" value="30000"/>
   </section>
 </airframe>
