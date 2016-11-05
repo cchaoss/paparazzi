@@ -26,6 +26,8 @@
 #ifndef SONAR_UART_H
 #define SONAR_UART_H
 
+extern float height_sonar,debug1,debug2,debug3;
+
 extern void sonar_uart_init(void);
 extern void sonar_uart_periodic(void);
 

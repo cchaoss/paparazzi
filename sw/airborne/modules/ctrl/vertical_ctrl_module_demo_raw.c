@@ -24,7 +24,6 @@
  *
  */
 
-#include "modules/sonar_uart/sonar_uart.h"
 #include "modules/ctrl/vertical_ctrl_module_demo.h"
 
 #include "generated/airframe.h"
@@ -39,12 +38,17 @@
 PRINT_CONFIG_VAR(VERTICAL_CTRL_MODULE_AGL_ID)
 
 #ifndef VERTICAL_CTRL_MODULE_PGAIN
-#define VERTICAL_CTRL_MODULE_PGAIN 2000
+#define VERTICAL_CTRL_MODULE_PGAIN 1.0
 #endif
 
 #ifndef VERTICAL_CTRL_MODULE_IGAIN
 #define VERTICAL_CTRL_MODULE_IGAIN 0.01
 #endif
+
+static abi_event agl_ev; ///< The altitude ABI event
+
+/// Callback function of the ground altitude
+static void vertical_ctrl_agl_cb(uint8_t sender_id __attribute__((unused)), float distance);
 
 struct VerticalCtrlDemo v_ctrl;
 
@@ -60,30 +64,30 @@ void vertical_ctrl_module_init(void)
   v_ctrl.igain = VERTICAL_CTRL_MODULE_IGAIN;
   v_ctrl.sum_err = 0.0f;
 
+  // Subscribe to the altitude above ground level ABI messages
+  AbiBindMsgAGL(VERTICAL_CTRL_MODULE_AGL_ID, &agl_ev, vertical_ctrl_agl_cb);
 }
 
 
 void vertical_ctrl_module_run(bool in_flight)
 {
-  	if (!in_flight) 
-	{
-    	// Reset integrators
-    	v_ctrl.sum_err = 0;
-    	stabilization_cmd[COMMAND_THRUST] = 0;
-  	} 
-	else 
-	{
-		v_ctrl.agl = fabs(height_sonar);
-		//int32_t nominal_throttle = 0.5 * MAX_PPRZ;
-		float err = v_ctrl.setpoint - v_ctrl.agl;	debug1 = err;//
-		int32_t P = v_ctrl.pgain * err;Bound(P, -800, 800);
-		int32_t I = v_ctrl.igain * v_ctrl.sum_err;Bound(I, -100, 100);
-		int32_t thrust = 4800 + P + I;Bound(thrust, 0, MAX_PPRZ);	debug2 = (float)thrust;//
-		
-		stabilization_cmd[COMMAND_THRUST] = thrust;
-		v_ctrl.sum_err += err;	debug3 = v_ctrl.sum_err;//
+  if (!in_flight) {
+    // Reset integrators
+    v_ctrl.sum_err = 0;
+    stabilization_cmd[COMMAND_THRUST] = 0;
+  } else {
+    int32_t nominal_throttle = 0.5 * MAX_PPRZ;
+    float err = v_ctrl.setpoint - v_ctrl.agl;
+    int32_t thrust = nominal_throttle + v_ctrl.pgain * err + v_ctrl.igain * v_ctrl.sum_err;
+    Bound(thrust, 0, MAX_PPRZ);
+    stabilization_cmd[COMMAND_THRUST] = thrust;
+    v_ctrl.sum_err += err;
+  }
+}
 
-  	}
+static void vertical_ctrl_agl_cb(uint8_t sender_id, float distance)
+{
+  v_ctrl.agl = distance;
 }
 
 
@@ -97,7 +101,6 @@ void guidance_v_module_init(void)
 void guidance_v_module_enter(void)
 {
   // reset integrator
-  v_ctrl.setpoint = fabs(height_sonar);
   v_ctrl.sum_err = 0.0f;
 }
 

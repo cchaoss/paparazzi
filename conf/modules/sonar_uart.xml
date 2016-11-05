@@ -3,7 +3,7 @@
 <module name="sonar_uart" dir="sonar_uart">
   <doc>
 	<description>A simple </description>
-    <configure name="SONAR_UART" value="UART4|UART6"/>
+    <configure name="SONAR_UART" value="UART3|UART4|UART5|UART6"/>
     <configure name="SONAR_UART_BAUD" value="B9600|B57600"/>
   </doc>
 
@@ -11,7 +11,7 @@
     <file name="sonar_uart.h"/>
   </header>
   <init fun="sonar_uart_init()"/>
-  	<periodic fun="sonar_uart_periodic()" freq="100"/>
+  	<periodic fun="sonar_uart_periodic()" freq="15"/>
   <makefile>
     <file name="sonar_uart.c"/>
   </makefile>

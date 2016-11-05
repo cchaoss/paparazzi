@@ -30,7 +30,7 @@
  *
  * X = [ z zdot accel_bias baro_offset ]
  */
-
+#include "modules/sonar_uart/sonar_uart.h"
 #include "subsystems/ins/vf_extended_float.h"
 #include "generated/airframe.h"
 #include "std.h"
@@ -70,10 +70,19 @@ struct VffExtended vff;
 
 static void send_vffe(struct transport_tx *trans, struct link_device *dev)
 {
-  pprz_msg_send_VFF_EXTENDED(trans, dev, AC_ID,
+ /* pprz_msg_send_VFF_EXTENDED(trans, dev, AC_ID,
                              &vff.z_meas_baro, &vff.z_meas,
                              &vff.z, &vff.zdot, &vff.zdotdot,
                              &vff.bias, &vff.offset);
+*/
+pprz_msg_send_VFF_EXTENDED(trans, dev, AC_ID,
+                            &vff.z_meas_baro, 
+							&vff.z_meas,
+                            &height_sonar, 
+							&debug1, 
+							&debug2,
+                            &debug3, 
+							&vff.offset);
 }
 #endif
 
