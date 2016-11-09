@@ -43,7 +43,7 @@ PRINT_CONFIG_VAR(VERTICAL_CTRL_MODULE_AGL_ID)
 #endif
 
 #ifndef VERTICAL_CTRL_MODULE_IGAIN
-#define VERTICAL_CTRL_MODULE_IGAIN 0.01
+#define VERTICAL_CTRL_MODULE_IGAIN 0.03
 #endif
 
 struct VerticalCtrlDemo v_ctrl;
@@ -76,12 +76,17 @@ void vertical_ctrl_module_run(bool in_flight)
 		v_ctrl.agl = fabs(height_sonar);
 		//int32_t nominal_throttle = 0.5 * MAX_PPRZ;
 		float err = v_ctrl.setpoint - v_ctrl.agl;	debug1 = err;//
-		int32_t P = v_ctrl.pgain * err;Bound(P, -800, 800);
-		int32_t I = v_ctrl.igain * v_ctrl.sum_err;Bound(I, -100, 100);
-		int32_t thrust = 4800 + P + I;Bound(thrust, 0, MAX_PPRZ);	debug2 = (float)thrust;//
+		int16_t P = v_ctrl.pgain * err*10;
+		Bound(P, -800, 800);
+		int16_t I = v_ctrl.igain * v_ctrl.sum_err >> 9;  debug2 = v_ctrl.sum_err;//
+		Bound(I, -100, 100);
+		int16_t D = v_ctrl.dgain * (error - error_old)/512; debug3 = (float)D;//
+		Bound(D, -300,300);
+		int16_t thrust = 4800 + P + I;Bound(thrust, 0, MAX_PPRZ);	//debug4 = (float)thrust;//
 		
 		stabilization_cmd[COMMAND_THRUST] = thrust;
-		v_ctrl.sum_err += err;	debug3 = v_ctrl.sum_err;//
+		v_ctrl.sum_err += err;	
+		static float error_old = error;
 
   	}
 }
