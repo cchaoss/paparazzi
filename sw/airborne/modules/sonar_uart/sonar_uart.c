@@ -25,34 +25,51 @@
 
 #include "mcu_periph/uart.h"
 #include "modules/sonar_uart/sonar_uart.h"
+#include "subsystems/abi_common.h"
+#include "subsystems/abi.h"
+
+#define TEST_ID 66
 
 float height_sonar,debug1,debug2,debug3;
+
+static abi_event test_ev;
+
+
+
+static void test_agl_cb(uint8_t sender_id __attribute__((unused)), float distance)
+{
+	height_sonar = distance;
+}
 
 void sonar_uart_init(void) 
 {
 	//	uart6_init();
-	uart_put_byte(&uart3, 0, 0x55);
-
+	//uart_put_byte(&uart3, 0, 0x55);
+	AbiBindMsgAGL(TEST_ID, &test_ev, test_agl_cb);
 }
 
 
 void sonar_uart_periodic()
-{
+{/*
 	static a = 0;
 	uint8_t b,c;
 	if (uart_char_available(&uart3)) 
 	{
 	    c =  uart_getch(&uart3);
 		b =  uart_getch(&uart3);
-		height_sonar = -(float)(265*c+b)/1000;
+		d = -(float)(265*c+b)/1000;
 	}else uart_put_byte(&uart3, 0, 0x55);
 	
-	if(fabs(height_sonar) > 4)
+	if(fabs(d) > 4)
 	{
 		a++;
-		if(a > 3) height_sonar = -1.0;
+		if(a > 3) d = -1.0;
 	}else a = 0;
-
+	*/
+	static float d = 0;
+	d++;
+	if(d > 65535)d= 0;
+	AbiSendMsgAGL(TEST_ID, d);
 #if 0
 	if (uart_char_available(&uart6)) 
 	{
