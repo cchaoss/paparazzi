@@ -27,24 +27,29 @@
 #include "modules/sonar_uart/sonar_uart.h"
 #include "subsystems/abi_common.h"
 #include "subsystems/abi.h"
+#include "subsystems/datalink/telemetry.h"
 
 #define TEST_ID 66
 
-float height_sonar,debug1,debug2,debug3;
-
+float height_sonar;
+int16_t debug4;
+int32_t debug6;
 static abi_event test_ev;
 
+static void test_agl_cb(uint8_t sender_id, float distance);
+//static void send_debug_data(struct transport_tx *trans, struct link_device *dev);
 
-
-static void test_agl_cb(uint8_t sender_id __attribute__((unused)), float distance)
+static void send_debug_data(struct transport_tx *trans, struct link_device *dev)
 {
-	height_sonar = distance;
+  pprz_msg_send_MY_DEBUG(trans, dev, AC_ID,		&height_sonar,&debug4,&debug6);
 }
 
 void sonar_uart_init(void) 
 {
 	//	uart6_init();
 	//uart_put_byte(&uart3, 0, 0x55);
+
+	register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_MY_DEBUG, send_debug_data);
 	AbiBindMsgAGL(TEST_ID, &test_ev, test_agl_cb);
 }
 
@@ -80,5 +85,12 @@ void sonar_uart_periodic()
 	//uart_put_byte(&uart6, 0, 0x11);
 #endif
 }
+
+
+static void test_agl_cb(uint8_t sender_id __attribute__((unused)), float distance)
+{
+	height_sonar = distance;
+}
+
 
 

@@ -56,7 +56,7 @@
   </servos>
 
   <modules>
-	<module name="vertical_ctrl_module_demo"/>
+	<!--module name="vertical_ctrl_module_demo"/-->
 	<module name="sonar_uart"/>
 
     <!--module name="gps" type="ubx_ucenter"/-->
@@ -239,12 +239,12 @@
 
   <section name="AUTOPILOT">
     <define name="MODE_MANUAL" value="AP_MODE_ATTITUDE_DIRECT"/>
-    <!--define name="MODE_AUTO1"  value="AP_MODE_ATTITUDE_RC_CLIMB"/-->
-    <define name="MODE_AUTO1"  value="AP_MODE_HOVER_Z_HOLD"/>
+    <define name="MODE_AUTO1"  value="AP_MODE_ATTITUDE_RC_CLIMB"/>
+    <define name="MODE_AUTO2"  value="AP_MODE_HOVER_Z_HOLD"/>
 
-	<define name="MODE_AUTO2"  value="AP_MODE_MODULE"/>
+	<!--define name="MODE_AUTO2"  value="AP_MODE_MODULE"/>
     <define name="GUIDANCE_H_MODE_MODULE_SETTING"    value="GUIDANCE_H_MODE_MODULE"/>	
-    <define name="GUIDANCE_V_MODE_MODULE_SETTING"    value="GUIDANCE_V_MODE_MODULE"/>
+    <define name="GUIDANCE_V_MODE_MODULE_SETTING"    value="GUIDANCE_V_MODE_MODULE"/-->
     
     <!--define name="MODE_STARTUP"  value="AP_MODE_ATTITUDE_DIRECT"/-->
   </section>

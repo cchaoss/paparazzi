@@ -70,11 +70,12 @@ struct VffExtended vff;
 
 static void send_vffe(struct transport_tx *trans, struct link_device *dev)
 {
- /* pprz_msg_send_VFF_EXTENDED(trans, dev, AC_ID,
+  pprz_msg_send_VFF_EXTENDED(trans, dev, AC_ID,
                              &vff.z_meas_baro, &vff.z_meas,
                              &vff.z, &vff.zdot, &vff.zdotdot,
                              &vff.bias, &vff.offset);
-*/
+
+/*
 pprz_msg_send_VFF_EXTENDED(trans, dev, AC_ID,
                             &vff.z_meas_baro, 
 							&vff.z_meas,
@@ -83,6 +84,7 @@ pprz_msg_send_VFF_EXTENDED(trans, dev, AC_ID,
 							&debug2,
                             &debug3, 
 							&vff.offset);
+*/
 }
 #endif
 
