@@ -145,6 +145,24 @@
   <section name="INS" prefix="INS_">
   </section>
 
+  <section name="STABILIZATION_RATE" prefix="STABILIZATION_RATE_">
+    <!-- setpoints -->
+    <define name="SP_MAX_P" value="140" unit="deg/s"/>
+    <define name="SP_MAX_Q" value="140" unit="deg/s"/>
+    <define name="SP_MAX_R" value="140" unit="deg/s"/>
+    <define name="DEADBAND_P" value="20"/>
+    <define name="DEADBAND_Q" value="20"/>
+    <define name="DEADBAND_R" value="200"/>
+
+    <!-- feedback -->
+    <define name="GAIN_P" value="800"/>
+    <define name="GAIN_Q" value="800"/>
+    <define name="GAIN_R" value="700"/>
+
+    <define name="IGAIN_P" value="240"/>
+    <define name="IGAIN_Q" value="240"/>
+    <define name="IGAIN_R" value="160"/>
+  </section>
 
   <!--姿态稳定环的PID参数-->
   <section name="STABILIZATION_ATTITUDE" prefix="STABILIZATION_ATTITUDE_">
