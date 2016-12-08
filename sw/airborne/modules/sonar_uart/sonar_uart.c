@@ -31,65 +31,44 @@
 
 #define TEST_ID 66
 
-float height_sonar;
-int16_t debug4;
-int32_t debug6;
+Debug Debug_data;
 static abi_event test_ev;
 
 static void test_agl_cb(uint8_t sender_id, float distance);
-//static void send_debug_data(struct transport_tx *trans, struct link_device *dev);
 
 static void send_debug_data(struct transport_tx *trans, struct link_device *dev)
 {
-  pprz_msg_send_MY_DEBUG(trans, dev, AC_ID,		&height_sonar,&debug4,&debug6);
+  pprz_msg_send_MY_DEBUG(trans, dev, AC_ID,	&Debug_data.height,&Debug_data.debug0,&Debug_data.debug1);
 }
 
 void sonar_uart_init(void) 
 {
-	//	uart6_init();
-	//uart_put_byte(&uart3, 0, 0x55);
+	//uart6_init();
+	uart_put_byte(&uart3, 0, 0x55);//want to get first data.
 
 	register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_MY_DEBUG, send_debug_data);
-	AbiBindMsgAGL(TEST_ID, &test_ev, test_agl_cb);
+	//AbiBindMsgAGL(TEST_ID, &test_ev, test_agl_cb);
 }
 
 
 void sonar_uart_periodic()
-{/*
-	static a = 0;
-	uint8_t b,c;
+{
+	uint8_t b1,b2;
 	if (uart_char_available(&uart3)) 
 	{
-	    c =  uart_getch(&uart3);
-		b =  uart_getch(&uart3);
-		d = -(float)(265*c+b)/1000;
+	    b2 =  uart_getch(&uart3);
+		b1 =  uart_getch(&uart3);
+		Debug_data.height = -(float)(265*b2+b1)/1000;
 	}else uart_put_byte(&uart3, 0, 0x55);
 	
-	if(fabs(d) > 4)
-	{
-		a++;
-		if(a > 3) d = -1.0;
-	}else a = 0;
-	*/
-	static float d = 0;
-	d++;
-	if(d > 65535)d= 0;
-	AbiSendMsgAGL(TEST_ID, d);
-#if 0
-	if (uart_char_available(&uart6)) 
-	{
-	    uint8_t c =  uart_getch(&uart6);
-		uart_put_byte(&uart6, 0, c);
-	}
-	else uart_put_byte(&uart4, 0, 0x11);
-	//uart_put_byte(&uart6, 0, 0x11);
-#endif
+	AbiSendMsgAGL(INS_INT_SONAR_ID, Debug_data.height);
+
 }
 
 
 static void test_agl_cb(uint8_t sender_id __attribute__((unused)), float distance)
 {
-	height_sonar = distance;
+	Debug_data.height = distance;
 }
 
 

@@ -26,7 +26,12 @@
 #ifndef SONAR_UART_H
 #define SONAR_UART_H
 
-extern float height_sonar,debug1,debug2,debug3;
+typedef struct _debug{
+uint16_t debug0;
+uint32_t debug1;
+float	height;
+}Debug;
+extern Debug Debug_data;
 
 extern void sonar_uart_init(void);
 extern void sonar_uart_periodic(void);

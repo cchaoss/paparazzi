@@ -29,21 +29,27 @@
       <!--define name="USE_SERVOS_7AND8"/-->
     </module>
 
+	<define name="INS_INT_SONAR_ID" value="55"/>
 	<define name="USE_UART3"/>
-	<define name="UART3_BAUD" value="B9600"/>
-    <!--define name="USE_BARO_BOARD" value="FALSE"/-->	<!--禁止板载气压计-->
-    	<!--define name="USE_I2C1"/-->      		<!--can not USE_SERVOS_7AND8 and USE_I2C1 at the same time-->
-    <module name="imu" 		type="aspirin_v2.2">	<!--conf/firmvares/subsystems/shared can find this makefile -->
+	<define name="UART3_BAUD" value="B9600"/>	<!--for sonar_us100-->
+
+    <!--define name="USE_BARO_BOARD" value="FALSE"/-->	<!--if use ext ms5611,please not use baro_board-->
+
+    <!--define name="USE_I2C1"/-->      		<!--can not USE_SERVOS_7AND8 and USE_I2C1 at the same time-->
+    <module name="imu" 	type="aspirin_v2.2">	<!--conf/firmvares/subsystems/shared can find this makefile -->
 		<!--configure name="MPU9250_I2C_DEV" value="i2c1"/--> 
 	</module>
+
     <module name="telemetry"     type="transparent"/>
     <module name="gps"           type="ublox"/>
     <module name="stabilization" type="int_quat"/>
+    <module name="stabilization" type="rate"/>
     <module name="ahrs"          type="int_cmpl_quat">
       <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="30"/>
     </module>
 
 	<module name="motor_mixing"/>
+
     <module name="ins" type="extended"/>
   </firmware>
 

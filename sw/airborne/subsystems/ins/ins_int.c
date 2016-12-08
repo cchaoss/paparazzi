@@ -64,6 +64,8 @@
 #ifndef INS_INT_SONAR_ID
 #define INS_INT_SONAR_ID ABI_BROADCAST
 #endif
+PRINT_CONFIG_VAR(INS_INT_SONAR_ID)
+
 abi_event sonar_ev;
 static void sonar_cb(uint8_t sender_id, float distance);
 
