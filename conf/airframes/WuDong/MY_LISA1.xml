@@ -26,38 +26,31 @@
 
     <module name="actuators"     type="pwm">
       <define name="SERVO_HZ" value="400"/>
-      <!--define name="USE_SERVOS_7AND8"/-->
+      <!--define name="USE_SERVOS_7AND8"/-->	<!--can not USE_SERVOS_7AND8 and USE_I2C1 at the same time-->
     </module>
-
-	<!--define name="USE_UART3"/>
-	<define name="UART3_BAUD" value="B9600"/-->
     <!--define name="USE_BARO_BOARD" value="FALSE"/-->	<!--禁止板载气压计-->
-    	<!--define name="USE_I2C1"/-->      		<!--can not USE_SERVOS_7AND8 and USE_I2C1 at the same time-->
+    	<!--define name="USE_I2C1"/-->      		
     <module name="imu" 		type="aspirin_v2.2">	<!--conf/firmvares/subsystems/shared can find this makefile -->
 		<!--configure name="MPU9250_I2C_DEV" value="i2c1"/--> 
 	</module>
+
     <module name="telemetry"     type="transparent"/>
     <module name="gps"           type="ublox"/>
     <module name="stabilization" type="int_quat"/>
-    <module name="ahrs"          type="int_cmpl_quat">
-      <define name="AHRS_GRAVITY_HEURISTIC_FACTOR" value="30"/>
-    </module>
-
+    <module name="ahrs"          type="int_cmpl_quat"/>
+	<module name="ins" 			 type="extended"/>
 	<module name="motor_mixing"/>
-    <module name="ins" type="extended"/>
   </firmware>
 
 
-  <servos driver="Pwm"> 
-    <servo name="FL"  no="0" min="1000" neutral="1085" max="2000"/>
-    <servo name="FR"  no="1" min="1000" neutral="1085" max="2000"/>
-    <servo name="BR"  no="2" min="1000" neutral="1085" max="2000"/>
-    <servo name="BL"  no="3" min="1000" neutral="1085" max="2000"/>
-  </servos>
-
   <modules>
-	<!--module name="vertical_ctrl_module_demo"/-->
-	<!--module name="sonar_uart"/-->
+	<module name="sonar_uart">
+		<define name="USE_SONAR"/>
+		<define name="INS_INT_SONAR_ID" value="66"/>
+		<define name="USE_UART3"/>
+		<define name="UART3_BAUD" value="B9600"/>
+	</module> 
+
     <!--module name="gps" type="ubx_ucenter"/-->
 	
 	<!--module name="module_choice.xml"/>
@@ -67,11 +60,11 @@
 		<define name="TAKE_OFF_ALTITUDE"  value="4"/>
 	</module-->
 
-	<!--module name="px4flow"/>
+	<module name="px4flow"/>
 	<module name="mavlink_decoder">
 		<configure name="MAVLINK_PORT"		value="UART1"/>
 		<configure name="MAVLINK_BAUD"		value="B115200"/>
-	</module-->
+	</module>
 
     <!--load name="baro_ms5611_i2c.xml">
 	  <define name="USE_I2C2"/>
@@ -88,6 +81,13 @@
     <axis name="YAW"    failsafe_value="0"/>
     <axis name="THRUST" failsafe_value="0"/>
   </commands>
+
+  <servos driver="Pwm"> 
+    <servo name="FL"  no="0" min="1000" neutral="1085" max="2000"/>
+    <servo name="FR"  no="1" min="1000" neutral="1085" max="2000"/>
+    <servo name="BR"  no="2" min="1000" neutral="1085" max="2000"/>
+    <servo name="BL"  no="3" min="1000" neutral="1085" max="2000"/>
+  </servos>
 
   <section name="MIXING" prefix="MOTOR_MIXING_">
     <!-- front left (CW), front right (CCW), back right (CW), back left (CCW) -->

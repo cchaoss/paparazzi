@@ -22,13 +22,14 @@
  * @author WuDong
  * 
  */
+#include "subsystems/abi_common.h"
 
 #ifndef SONAR_UART_H
 #define SONAR_UART_H
 
 typedef struct _debug{
-uint16_t debug0;
-uint32_t debug1;
+short debug0;
+int debug1;
 float	height;
 }Debug;
 extern Debug Debug_data;

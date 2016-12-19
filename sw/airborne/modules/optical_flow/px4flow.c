@@ -88,8 +88,7 @@ void px4flow_downlink(void)
                         &optical_flow.flow_x,
                         &optical_flow.flow_y,
                         &optical_flow.flow_comp_m_x,
-                        //&optical_flow.flow_comp_m_y,
-						&height_bis,
+                        &optical_flow.flow_comp_m_y,
                         &optical_flow.quality,
                         &optical_flow.ground_distance);
 }
