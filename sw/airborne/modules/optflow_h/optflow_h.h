@@ -18,14 +18,13 @@
  * <http://www.gnu.org/licenses/>.
  */
 /**
- * @file "modules/love_mode_h/love_mode_h.h"
+ * @file "modules/optflow_h/optflow_h.h"
  * @author wudong
- * @e-mail 862281335@qq.com
- * test the px4flow in ppz
+ * use the rc_c in v,use the flow stab in h
  */
 
-#ifndef LOVE_MODE_H_H
-#define LOVE_MODE_H_H
+#ifndef OPTFLOW_H_H
+#define OPTFLOW_H_H
 
 #include <std.h>
 #include "math/pprz_algebra_int.h"
@@ -37,13 +36,11 @@ float error_x;
 float error_y;
 float error_vx_int;
 float error_vy_int;
-struct Int32Eulers eulers;   ///< The commands that are send to the hover loop
+struct Int32Eulers eulers;   //< The commands that are send to the hover loop
 };
 extern struct flow_stab stab;
-
-extern void control_h_enter(void);
-extern void control_h_read_rc(void);
-extern void control_h_run(bool in_flight);
+extern void flow_module_init(void);
+extern void flow_stab_run(void);
 
 #endif
 

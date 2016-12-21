@@ -1,0 +1,16 @@
+<!DOCTYPE module SYSTEM "module.dtd">
+
+<module name="optflow_h" dir="optflow_h">
+  <doc>
+    <description>use the rc_c in v,use the flow stab in h</description>
+  </doc>
+  <header>
+    <file name="optflow_h.h"/>
+  </header>
+  <init fun="flow_module_init()"/>
+  <periodic fun="flow_stab_run()" freq="50"/>
+  <makefile>
+    <file name="optflow_h.c"/>
+  </makefile>
+</module>
+

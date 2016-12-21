@@ -18,14 +18,14 @@
  * <http://www.gnu.org/licenses/>.
  */
 /**
- * @file "modules/love_mode_h/love_mode_h.c"
+ * @file "modules/optflow_h/optflow_h.c"
  * @author wudong
- * @e-mail 862281335@qq.com
- * test the px4flow in ppz
+ * use the rc_c in v,use the flow stab in h
  */
+
+#include "modules/optflow_h/optflow_h.h"
 #include "subsystems/radio_control.h"
 #include "subsystems/ins/vf_float.h"
-#include "modules/love_mode_h/love_mode_h.h"
 #include "firmwares/rotorcraft/autopilot.h"
 #include "firmwares/rotorcraft/guidance/guidance_h.h"
 #include "firmwares/rotorcraft/stabilization/stabilization_attitude.h"
@@ -36,20 +36,14 @@ struct flow_stab stab;
 
 static void Calculate_euler(float vel_x, float vel_y, float vel_z);
 
-void control_h_enter(void) 
+void flow_module_init(void)
 {
 	stab.eulers.phi = 0;
 	stab.eulers.theta = 0;
 	stab.eulers.psi = stateGetNedToBodyEulers_i()->psi;
 	stabilization_attitude_enter();
 }
-
-void control_h_read_rc(void)
-{									
-	stabilization_attitude_read_rc(autopilot_in_flight, FALSE, FALSE);//GUIDANCE_H_MODE_ATTITUDE
-}
-
-void control_h_run(bool in_flight) 
+void flow_stab_run(void) 
 {
 	//AUX1
 	if(USEC_OF_RC_PPM_TICKS(ppm_pulses[4]) > 1800)
@@ -78,8 +72,9 @@ void control_h_run(bool in_flight)
 		stab.error_x = 0;
 		stab.error_y = 0;
 	}
-	stabilization_attitude_run(in_flight);//GUIDANCE_H_MODE_ATTITUDE
+	//stabilization_attitude_run(in_flight);//GUIDANCE_H_MODE_ATTITUDE
 }
+
 
 #define Pmax 14000
 #define Imax 5000
@@ -140,5 +135,3 @@ static void Calculate_euler(float vel_x, float vel_y, float vel_z)
 	//debug[0] = stab.eulers.theta;//roll
 	//debug[1] = stab.eulers.theta;//pitch
 }
-
-

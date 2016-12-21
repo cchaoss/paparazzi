@@ -33,8 +33,10 @@
     <module name="imu" 		type="aspirin_v2.2">	<!--conf/firmvares/subsystems/shared can find this makefile -->
 		<!--configure name="MPU9250_I2C_DEV" value="i2c1"/--> 
 	</module>
-
-    <module name="telemetry"     type="transparent"/>
+	
+    <module name="telemetry"     type="transparent">
+	<configure name="TELEMETRY_FREQUENCY" value="100"/>
+	</module>
     <module name="gps"           type="ublox"/>
     <module name="stabilization" type="int_quat"/>
     <module name="ahrs"          type="int_cmpl_quat"/>
@@ -44,12 +46,12 @@
 
 
   <modules>
-	<module name="sonar_uart">
+	<!--module name="sonar_uart">
 		<define name="USE_SONAR"/>
 		<define name="INS_INT_SONAR_ID" value="66"/>
 		<define name="USE_UART3"/>
 		<define name="UART3_BAUD" value="B9600"/>
-	</module> 
+	</module--> 
 
     <!--module name="gps" type="ubx_ucenter"/-->
 	
@@ -65,6 +67,7 @@
 		<configure name="MAVLINK_PORT"		value="UART1"/>
 		<configure name="MAVLINK_BAUD"		value="B115200"/>
 	</module>
+	<module name="optflow_h"/>
 
     <!--load name="baro_ms5611_i2c.xml">
 	  <define name="USE_I2C2"/>

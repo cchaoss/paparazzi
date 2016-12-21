@@ -89,6 +89,7 @@ PRINT_CONFIG_VAR(PERIODIC_FREQUENCY)
 /* TELEMETRY_FREQUENCY is defined in generated/periodic_telemetry.h
  * defaults to 60Hz or set by TELEMETRY_FREQUENCY configure option in airframe file
  */
+
 PRINT_CONFIG_VAR(TELEMETRY_FREQUENCY)
 
 /* MODULES_FREQUENCY is defined in generated/modules.h
